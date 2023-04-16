@@ -1,5 +1,6 @@
 package com.BankingApplication.Banking.Application.Model;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Investment
 {
     @Id
-    private Long investmentID;
+    private Long investmentId;
     private Double investmentBalance;
     private String investmentType;
     private Long customerID;

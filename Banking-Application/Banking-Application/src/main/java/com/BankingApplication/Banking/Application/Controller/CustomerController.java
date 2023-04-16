@@ -233,9 +233,11 @@ public class CustomerController {
         List<Transaction> transactions = transactionService.allTransactions(accountNo);
         return new ResponseEntity<>(transactions,HttpStatus.CREATED);
     }
+
 //Given a customerId, we will return a list of all the Investment transactions that are associated with that customer
-    @PostMapping("/investmentTransactions")
+    @GetMapping("/investmentTransactions")
     public ResponseEntity<List<Investment>> InvestmentTransactions(@RequestParam("CustomerId") Long customerId){
+//        System.out.println("customerId: " + customerId);
         List<Investment> res = investmentService.investmentTransactions(customerId);
         return new ResponseEntity<>(res,HttpStatus.CREATED);
     }
