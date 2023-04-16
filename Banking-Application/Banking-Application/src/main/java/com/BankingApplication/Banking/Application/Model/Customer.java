@@ -19,6 +19,23 @@ public class Customer{
     private String address;
     private String username;
     private String password;
+    private Long aadhaarCardNo;
+    private String panCardNo;
+//    private Account account=null;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //How are we going to relate Customer with Transaction,Loan.
     //We need to have those feilds as well in Customer and refer to them
     //e.g @DocumentReference

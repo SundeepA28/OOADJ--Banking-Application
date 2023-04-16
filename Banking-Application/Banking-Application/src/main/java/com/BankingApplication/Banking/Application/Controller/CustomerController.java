@@ -34,9 +34,12 @@ public class CustomerController {
     @Autowired
     private GlobalTransactionService globaltransactionService;
 
+    @Autowired
+    private InvestmentService investmentService;
+
     @GetMapping
     public ResponseEntity<List<Customer>> getAllCustomers(){
-        return new ResponseEntity<List<Customer>>(customerService.allCustomers(), HttpStatus.OK);
+        return new ResponseEntity<List<Customer>>(customerService.allCustomers(), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
@@ -58,9 +61,13 @@ public class CustomerController {
                                                      @RequestParam("Address") String Address,
                                                      @RequestParam("Email") String Email,
                                                      @RequestParam("Username") String Username,
-                                                     @RequestParam("Password") String Password){
+                                                     @RequestParam("Password") String Password,
+                                                     @RequestParam("Aadhaar") Long aadhaarcardNo,
+                                                     @RequestParam("PanCard") String pancardNo
 
-        boolean ans = customerService.createCustomer(Name,PhoneNumber,Address,Email,Username,Password);
+    ){
+
+        boolean ans = customerService.createCustomer(Name,PhoneNumber,Address,Email,Username,Password,aadhaarcardNo,pancardNo);
         if(ans==false){
             return new ResponseEntity<>(false,HttpStatus.CREATED);
         }
@@ -92,6 +99,25 @@ public class CustomerController {
         return new ResponseEntity<>("Updated",HttpStatus.CREATED);
     }
 
+    @PostMapping("/createAccount")
+    public ResponseEntity<String> createAccount(
+            @RequestParam("PanCardNo") String panCardNo,
+            @RequestParam("Password") String password,
+            @RequestParam("AccountType") String accountType,
+            @RequestParam("CustomerId") Long customerId,
+            @RequestParam("Pin") Long pin
+    ){
+        Optional<Customer> res = customerService.singleCustomer(customerId);
+        if(res.get().getPassword().equals(password)==false){
+            return new ResponseEntity<>("WrongPassword",HttpStatus.CREATED);
+        }
+        if(res.get().getPanCardNo().equals(panCardNo)==false){
+            return new ResponseEntity<>("Wrong PanCard No",HttpStatus.CREATED);
+        }
+
+        String ans = accountService.createAccount(accountType,pin,customerId);
+        return new ResponseEntity<>(ans,HttpStatus.CREATED);
+    }
     @PostMapping("/applyLoan")
     public ResponseEntity<Boolean> ApplyLoan(
             @RequestParam("Name") String nomineeName,
@@ -152,6 +178,14 @@ public class CustomerController {
         return new ResponseEntity<>(ans,HttpStatus.CREATED);
     }
 
+    //given a customerId return all the loan details
+    @GetMapping("getAllLoans")
+    public ResponseEntity<List<Loan>> GetAllLoans(@RequestParam("CustomerId") Long customerId){
+        List<Loan> ans = loanService.getAllLoans(customerId);
+        return new ResponseEntity<>(ans,HttpStatus.CREATED);
+    }
+
+    //Given a customerId we will return all the customer Details
     @PostMapping("/getCustomerDetails")
     public ResponseEntity<Optional<Customer>> GetCustomerDetails(@RequestParam("customerId") Long customerId){
 
@@ -159,6 +193,31 @@ public class CustomerController {
         return new ResponseEntity<>(ans,HttpStatus.CREATED);
     }
 
+    //Getting a list of all customer details without passing any parameters.
+    @PostMapping("/getAllCustomers")
+    public ResponseEntity<List<Customer>> GetAllCustomers(){
+        return new ResponseEntity<>(customerService.allCustomers(),HttpStatus.CREATED);
+    }
+
+    //Given CustomerId, return account details(all fields).
+    @PostMapping("/getAccountDetails")
+    public ResponseEntity<Optional<Account>> GetAccountDetails(
+            @RequestParam("CustomerId") Long customerId
+    ){
+        Optional<Account> acc = accountService.singleAccountUsingCustomerId(customerId);
+        return new ResponseEntity<>(acc,HttpStatus.CREATED);
+    }
+
+
+    //implemented the below function in
+
+//    @PostMapping("/UpdateLoanStatus")
+//    public ResponseEntity<Boolean> updateLoanStatus(
+//            @RequestParam("LoanId") Long loanId,
+//            @RequestParam("Status") String status
+//    ){
+//        return new ResponseEntity<>(loanService.UpdateLoanStatus(loanId,status),HttpStatus.CREATED);
+//    }
 
     @PostMapping("/AllTransactions")
     public ResponseEntity<List<Transaction>> GetAllTransactions(@RequestParam("customerId") Long customerId){
@@ -174,7 +233,12 @@ public class CustomerController {
         List<Transaction> transactions = transactionService.allTransactions(accountNo);
         return new ResponseEntity<>(transactions,HttpStatus.CREATED);
     }
-
+//Given a customerId, we will return a list of all the Investment transactions that are associated with that customer
+    @PostMapping("/investmentTransactions")
+    public ResponseEntity<List<Investment>> InvestmentTransactions(@RequestParam("CustomerId") Long customerId){
+        List<Investment> res = investmentService.investmentTransactions(customerId);
+        return new ResponseEntity<>(res,HttpStatus.CREATED);
+    }
 
 
 
@@ -287,7 +351,7 @@ public class CustomerController {
 
     @GetMapping("/{CustomerID}")
     public ResponseEntity<Optional<Customer>> getSingleCustomer(@PathVariable long CustomerID){
-        return new ResponseEntity<Optional<Customer>>(customerService.singleCustomer(CustomerID),HttpStatus.OK);
+        return new ResponseEntity<Optional<Customer>>(customerService.singleCustomer(CustomerID),HttpStatus.CREATED);
     }
 
 

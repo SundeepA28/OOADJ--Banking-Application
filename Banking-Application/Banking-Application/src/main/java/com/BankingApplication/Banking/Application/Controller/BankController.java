@@ -17,6 +17,9 @@ public class BankController{
     @Autowired
     private BeneficiaryService beneficiaryService;
 
+    @Autowired
+    private LoanService loanService;
+
 
     @PostMapping("/getAllPendingBeneficiaries")
     public ResponseEntity<List<Beneficiary>> LoginCustomer(){
@@ -32,7 +35,13 @@ public class BankController{
         System.out.println("Reached Controller");
         return new ResponseEntity<>(ans,HttpStatus.CREATED);
     }
-
+    @PostMapping("/UpdateLoanStatus")
+    public ResponseEntity<Boolean> updateLoanStatus(
+            @RequestParam("LoanId") Long loanId,
+            @RequestParam("Status") String status
+    ){
+        return new ResponseEntity<>(loanService.UpdateLoanStatus(loanId,status),HttpStatus.CREATED);
+    }
 
 
 }

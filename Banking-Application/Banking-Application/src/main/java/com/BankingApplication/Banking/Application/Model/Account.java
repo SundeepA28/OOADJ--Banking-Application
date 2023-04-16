@@ -19,5 +19,5 @@ public class Account
     private Double accountBalance;
     private String accountType;
     private Long pin;
-
+    private String status;
 }

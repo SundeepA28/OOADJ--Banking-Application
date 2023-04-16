@@ -1,5 +1,6 @@
 package com.BankingApplication.Banking.Application.Services;
 
+import com.BankingApplication.Banking.Application.Model.Beneficiary;
 import com.BankingApplication.Banking.Application.Model.Customer;
 import com.BankingApplication.Banking.Application.Model.Loan;
 import com.BankingApplication.Banking.Application.Repository.LoanRepository;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ public class LoanService {
         }
         Long id=Math.abs((timestamp * 1000000000L) + counter) % 1000000000L;
 
-        String status = "PENDING";
+        String status = "APPLIED";
         Loan loan = new Loan(id,CustomerId,loanType,interestRate,Term,amountRequested,status);
         Loan res = loanRepository.insert(loan);
         if(res==null){return 0l;}
@@ -50,5 +52,20 @@ public class LoanService {
             loanIds.add(loan.getLoanID());
         }
         return  loanIds;
+    }
+
+    public List<Loan> getAllLoans(Long customerId){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("customerID").is(customerId));
+        List<Loan> loans = mongoTemplate.find(query, Loan.class);
+        return loans;
+    }
+
+    public boolean UpdateLoanStatus(Long LoanId,String status){
+        mongoTemplate.update(Loan.class)
+                .matching(Criteria.where("loanID").is(LoanId))
+                .apply(new Update().set("status",status))
+                .first();
+        return true;
     }
 }
