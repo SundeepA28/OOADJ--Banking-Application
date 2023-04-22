@@ -118,6 +118,21 @@ public class CustomerController {
         String ans = accountService.createAccount(accountType,pin,customerId);
         return new ResponseEntity<>(ans,HttpStatus.CREATED);
     }
+    //update pin
+    @PostMapping("/ChangePIN")
+    public ResponseEntity<String> changepin(
+            @RequestParam("OldPIN") Long oldPin,
+            @RequestParam("NewPIN") Long newPin,
+            @RequestParam("CustomerID") Long customerId
+    ){
+        Optional<Account> res = accountService.singleAccountUsingCustomerId(customerId);
+        if(res.get().getPin().equals(oldPin)==false){
+            return new ResponseEntity<>("WrongPin",HttpStatus.CREATED);
+        }
+        Long accountNo = res.get().getAccountNo();
+        String ans = accountService.UpdatePin(accountNo,newPin);
+        return new ResponseEntity<>(ans,HttpStatus.CREATED);
+    }
     @PostMapping("/applyLoan")
     public ResponseEntity<Boolean> ApplyLoan(
             @RequestParam("Name") String nomineeName,
@@ -179,7 +194,7 @@ public class CustomerController {
     }
 
     //given a customerId return all the loan details
-    @GetMapping("getAllLoans")
+    @PostMapping("/getAllLoans")
     public ResponseEntity<List<Loan>> GetAllLoans(@RequestParam("CustomerId") Long customerId){
         List<Loan> ans = loanService.getAllLoans(customerId);
         return new ResponseEntity<>(ans,HttpStatus.CREATED);
@@ -193,11 +208,7 @@ public class CustomerController {
         return new ResponseEntity<>(ans,HttpStatus.CREATED);
     }
 
-    //Getting a list of all customer details without passing any parameters.
-    @PostMapping("/getAllCustomers")
-    public ResponseEntity<List<Customer>> GetAllCustomers(){
-        return new ResponseEntity<>(customerService.allCustomers(),HttpStatus.CREATED);
-    }
+
 
     //Given CustomerId, return account details(all fields).
     @PostMapping("/getAccountDetails")
@@ -245,13 +256,30 @@ public class CustomerController {
 
 
     @PostMapping("/checkAccount")
-    public ResponseEntity<Optional<Account>> CheckAccount(@RequestParam("CustomerId") Long customerId){
+    public ResponseEntity<String> CheckAccount(@RequestParam("CustomerId") Long customerId){
 
+        System.out.println("++++++++++++++++++++");
+        System.out.println(customerId);
+        System.out.println("+++++++++++++++++++++");
         Optional<Account> res = accountService.singleAccountUsingCustomerId(customerId);
+        if(res.isPresent()){
+            if(res.get().getStatus().equals("PENDING")){
+                return new ResponseEntity<>("PENDING",HttpStatus.CREATED);
+            }else if(res.get().getStatus().equals("APPROVED")){
+                return new ResponseEntity<>("APPROVED",HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>("REJECTED",HttpStatus.CREATED);
+            }
 
-        return new ResponseEntity<>(res,HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("NOTFOUND",HttpStatus.CREATED);
     }
 
+    @PostMapping("/getAccountDetailsForCustomer")
+    public ResponseEntity<Optional<Account>> getAccountDetailsForCustomer(@RequestParam("CustomerId") Long customerId){
+        Optional<Account> res = accountService.singleAccountUsingCustomerId(customerId);
+        return new ResponseEntity<>(res,HttpStatus.CREATED);
+    }
 
 
     @PostMapping("/transfermoney")

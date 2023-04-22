@@ -23,15 +23,30 @@ const Transactions = () => {
         fdata.append("CustomerId",customerId);
         axios.post("http://localhost:8080/customer/checkAccount",fdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
             console.log(res);
-            if(res.data===null){
+
+            if(res.data==="NOTFOUND"){
                 document.getElementById("content").innerHTML="<h1 class='pt-32 pl-40 text-left text-4xl'>Please Create your Bank Account to enable Features !</h1><button class='bg-[#2F4266] text-white ml-10 px-20 py-3 mt-10 rounded-md hover:cursor-pointer hover:bg-[#425475]' id='gotoaddaccount'>Add Account</button>";
                 document.getElementById("gotoaddaccount").addEventListener("click",()=>{
-                    window.location.href="/addaccount";
+                    window.location.href="/createaccount";
                 });
+            }else if(res.data==="APPROVED"){
+
+                axios.post("http://localhost:8080/customer/getAccountDetailsForCustomer",fdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((resp)=>{
+                
+                accno = resp.data.accountNo;
+                accbal = resp.data.accountBalance;
+                });
+
+                
+            }else if(res.data==="REJECTED"){
+                document.getElementById("content").innerHTML="<h1 class='pt-32 pl-40 text-left text-4xl'>Your Account is Rejected by Admin !</h1>";
             }else{
-                accno = res.data.accountNo;
-                accbal = res.data.accountBalance;
+                document.getElementById("content").innerHTML="<h1 class='pt-32 pl-40 text-left text-4xl'>Your Account is Pending for Approval !</h1>";
             }
+
+
+
+
         });
 
         var ffdata = new FormData();

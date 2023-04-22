@@ -7,20 +7,91 @@ import axios from 'axios';
 
 import Logo from "./Common/logo2.png";
 
-const ApproveBeneficiaries = () => {
+const UpdateLoanStatus = () => {
     var username = window.localStorage.getItem("username");
 
     const [user,setuser] = useState({});
     
     const hasMounted = useRef(false);
+
+    const updateStatus = (event) => {
+        const lid = event.target.id;
+        const status = document.getElementById(lid+"-select").value;
+        if(status==="#"){toast.error("Choose a Status value !");return;}
+        var ldata = new FormData();
+        ldata.append("LoanId",lid);
+        ldata.append("Status",status);
+        axios.post("http://localhost:8080/bank/UpdateLoanStatus",ldata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
+            if(res.data===true){
+                toast.success("Status Updated Successfully");
+                setTimeout(() => {window.location.href = "/updateloanstatus";},3000);
+            }else{
+                toast.error("Internal Server Error !");
+            }
+        });
+        
+    };
+
+
+
     useEffect(()=>{
         
         if(!hasMounted.current){
             hasMounted.current=true;
 
-            axios.post("http://localhost:8080/bank/getAllPendingBeneficiaries",{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
+            axios.post("http://localhost:8080/bank/getAllCustomers",{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
                 console.log(res);
+
+                for(var i=0;i<res.data.length;i++){
+                    var cid = res.data[i].customerID;
+                    var fdata = new FormData();
+                    fdata.append("CustomerId",cid);
+
+                    var panCardNo = res.data[i].panCardNo;
+
+                    axios.post("http://localhost:8080/customer/getAllLoans",fdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((resp)=>{
+                        console.log(resp);
+                        for(var j=0;j<resp.data.length;j++){
+                            var table = document.getElementById("loansStatus");
+                            var row=table.insertRow(-1);
+                            var cell1 = row.insertCell(0);
+                            var cell2 = row.insertCell(1);
+                            var cell3 = row.insertCell(2);
+                            var cell4 = row.insertCell(3);
+                            var cell5 = row.insertCell(4);
+                            var cell6 = row.insertCell(5);
+                            var cell7 = row.insertCell(6);
+                            var cell8 = row.insertCell(7);
+                            var cell9 = row.insertCell(8);
+                            var cell10 = row.insertCell(9);
+
+                            cell1.innerHTML=cid;
+                            cell2.innerHTML=panCardNo;
+                            cell3.innerHTML=resp.data[j].loanID;
+                            cell4.innerHTML=resp.data[j].loanType;
+                            cell5.innerHTML=resp.data[j].amountRequested;
+                            cell6.innerHTML=resp.data[j].interestRate;
+                            cell7.innerHTML=resp.data[j].term;
+                            cell8.innerHTML=resp.data[j].status;
+                            cell9.innerHTML = `
+                            <select id="${resp.data[j].loanID}-select">
+                            <option value="#" label="Choose Status"></option>
+                            <option value="PENDING" label="PENDING"></option>
+                            <option value="INPROGRESS" label="INPROGRESS"></option>
+                            <option value="ACCEPTED" label="ACCEPTED"></option>
+                            <option value="REJECTED" label="REJECTED"></option>
+                            </select>`;
+
+                            cell10.innerHTML = `<button id="${resp.data[j].loanID}" class="bg-[#2F4266] text-white px-6 py-2 rounded-md hover:cursor-pointer hover:bg-[#425475]">Update</button>`;
+                            
+                            document.getElementById(`${resp.data[j].loanID}`).addEventListener("click",(event)=>updateStatus(event));
+                        }
+                    });
+
+                }
+
                 var table = document.getElementById("MyTable");
+                {/* 
                 for(var i=0;i<res.data.length;i++){
                     var row = table.insertRow(-1);
                     var cell1 = row.insertCell(0);
@@ -41,6 +112,7 @@ const ApproveBeneficiaries = () => {
                     document.getElementById(`${res.data[i].accountNo}-Reject`).addEventListener("click",(event)=>reject_func(event));
                 
                 }
+                */}
             });
         }
     },[]);
@@ -66,7 +138,6 @@ const accept_func = (event) =>{
 
 
 const reject_func = (event) =>{
-    console.log("inside reject function");
     const benaccno = event.target.id.split("-")[0];
     console.log(benaccno); 
     var formdata = new FormData();
@@ -134,20 +205,24 @@ return (
             </div>
             <div  id="content">
                 <div class="pt-10 pl-10 text-left" id="addData">
-                <h1 class="text-4xl">Hey, Welcome to BankGO!</h1>
-                <h1 class="text-2xl pt-3">Your One Stop Destination to make Your Banking Easy!</h1>
+                <h1 class="text-4xl">Update Loan Status!</h1>
+                <h1 class="text-2xl pt-3">Hey Admin, Go through the Customer Info and Update Loan Status Carefully!</h1>
                 
                 </div>
 
                 <div class="text-left pl-10 pt-16">
-                    <table id="MyTable">
+                    <table id="loansStatus">
                         <tr>
                             <th>Customer ID</th>
-                            <th>Beneficiary Name</th>
-                            <th>Beneficiary Bank</th>
-                            <th>Beneficiary IFSC</th>
-                            <th>Beneficiary Account Number</th>
-                            <th>Actions</th>
+                            <th>Pan Card No</th>
+                            <th>Loan Id</th>
+                            <th>Loan Type</th>
+                            <th>Amount Requested</th>
+                            <th>Interest Rate</th>
+                            <th>Term</th>
+                            <th>status</th>
+                            <th>Choose Status</th>
+                            <th>Update</th>
                         </tr>
                     </table>
                 </div>
@@ -161,4 +236,4 @@ return (
 
 
 
-export default ApproveBeneficiaries;
+export default UpdateLoanStatus;

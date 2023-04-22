@@ -1,6 +1,7 @@
 package com.BankingApplication.Banking.Application.Services;
 
 import com.BankingApplication.Banking.Application.Model.Account;
+import com.BankingApplication.Banking.Application.Model.Beneficiary;
 import com.BankingApplication.Banking.Application.Model.Customer;
 import com.BankingApplication.Banking.Application.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,22 @@ public class AccountService {
 
     public Optional<Account> singleAccountUsingCustomerId(long CustomerId){
         return accountRepository.findAccountByCustomerId(CustomerId);
+    }
+
+    public boolean UpdateAccount(Long accountNo,String status){
+        mongoTemplate.update(Account.class)
+                .matching(Criteria.where("accountNo").is(accountNo))
+                .apply(new Update().set("status",status))
+                .first();
+        return true;
+    }
+
+    public String UpdatePin(Long accountNo,Long newPin){
+        mongoTemplate.update(Account.class)
+                .matching(Criteria.where("accountNo").is(accountNo))
+                .apply(new Update().set("pin",newPin))
+                .first();
+        return "Successfully updated Pin";
     }
 
     public String createAccount(String accountType,Long pin,Long customerId){

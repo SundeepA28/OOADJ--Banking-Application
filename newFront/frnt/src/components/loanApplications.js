@@ -19,72 +19,33 @@ const LoanApplications = () => {
     const hasMounted = useRef(false);
     useEffect(()=>{
         
-        if(!hasMounted.current){hasMounted.current=true;
-        
-        const userData = new FormData();
-        userData.append("customerId",customerId);
-        
-
-        var fdata = new FormData();
-        fdata.append("CustomerId",customerId);
-        axios.post("http://localhost:8080/customer/getLoans",fdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
+        if(!hasMounted.current){
+            hasMounted.current=true;
+            var fdata = new FormData();
+            fdata.append("CustomerId",customerId);
+            axios.post("http://localhost:8080/customer/getAllLoans",fdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
             console.log(res);
+            var table = document.getElementById("loans");
+            for(var i=0;i<res.data.length;i++){
+                var row=table.insertRow(-1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+                var cell6 = row.insertCell(5);
+
+                cell1.innerHTML=res.data[i].loanID;
+                cell2.innerHTML=res.data[i].loanType;
+                cell3.innerHTML=res.data[i].amountRequested;
+                cell4.innerHTML=res.data[i].interestRate;
+                cell5.innerHTML=res.data[i].term;
+                cell6.innerHTML=res.data[i].status;
+            }
         });
 
     }
     },[]);
-
-
-const getTrans = () =>{
-    if(accno != 0){
-        var ffdata = new FormData();
-        ffdata.append("customerId",customerId);
-        axios.post("http://localhost:8080/customer/AllTransactions",ffdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
-            console.log(res);
-            var table = document.getElementById("transactions");
-            for(var i=0;i<Math.min(res.data.length,5);i++){
-                var row=table.insertRow(-1);
-                var cell1=row.insertCell(0);
-                var cell2=row.insertCell(1);
-                var cell3=row.insertCell(2);
-                var cell4=row.insertCell(3);
-                var cell5=row.insertCell(4);
-                var cell6=row.insertCell(5);
-                var cell7=row.insertCell(6);
-                
-                var AccountNumber = 0;
-                var credit = false;
-                if(res.data[i].senderAccountNo === accno){
-                    AccountNumber = res.data[i].receiveeAccountNo;
-                }else{
-                    AccountNumber = res.data[i].senderAccountNo;
-                    credit = true;
-                }
-
-                if(credit==true){
-                    cell1.innerHTML=res.data[i].transactionID;
-                    cell2.innerHTML=AccountNumber;
-                    cell3.innerHTML=res.data[i].amount;
-                    cell4.innerHTML="-";
-                    cell5.innerHTML=res.data[i].description;
-                    cell6.innerHTML=res.data[i].date;
-                    cell7.innerHTML=res.data[i].status;
-                }else{
-                    cell1.innerHTML=res.data[i].transactionID;
-                    cell2.innerHTML=AccountNumber;
-                    cell3.innerHTML="-";
-                    cell4.innerHTML=res.data[i].amount;
-                    cell5.innerHTML=res.data[i].description;
-                    cell6.innerHTML=res.data[i].date;
-                    cell7.innerHTML=res.data[i].status;
-                }
-                
-            }
-
-        
-            });
-        }
-}
 
 
 const logout_func = () =>{
@@ -149,14 +110,13 @@ return (
 
                 <div class="text-left pl-10 pt-16">
                     <div id="insertData" class="pt-3">
-                    <table id="transactions">
+                    <table id="loans">
                         <tr>
-                            <th>Transaction ID</th>
-                            <th>Account No</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Description</th>
-                            <th>Date</th>
+                            <th>Loan ID</th>
+                            <th>Loan Type</th>
+                            <th>Amount Requested</th>
+                            <th>Interest Rate</th>
+                            <th>Term</th>
                             <th>Status</th>
                         </tr>
                     </table>

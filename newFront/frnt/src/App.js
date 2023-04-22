@@ -16,6 +16,9 @@ import UpdateNominee from './components/updateNominee';
 import AdminLogin from './components/adminLogin';
 import AdminDashboard from './components/adminDashboard';
 import ApproveBeneficiaries from './components/approveBeneficiaries';
+import UpdateLoanStatus from './components/updateLoanStatus';
+import CreateAccount from './components/createAccount';
+import ApproveAccount from './components/approveAccount';
 function App() {
   return (
     <div className="App">
@@ -35,6 +38,9 @@ function App() {
           <Route exact path="/adminlogin" element={<AdminLogin/>}></Route>
           <Route exact path="/admindashboard" element={<AdminDashboard/>}></Route>
           <Route exact path="/approvebeneficiaries" element={<ApproveBeneficiaries/>}></Route>
+          <Route exact path="/updateloanstatus" element={<UpdateLoanStatus/>}></Route>
+          <Route exact path="/createaccount" element={<CreateAccount/>}></Route>
+          <Route exact path="/approveaccount" element={<ApproveAccount/>}></Route>
           
         </Routes>
       </Router>

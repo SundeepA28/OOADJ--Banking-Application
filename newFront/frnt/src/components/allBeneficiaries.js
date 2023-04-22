@@ -20,14 +20,25 @@ const AllBeneficiary = () => {
         ffdata.append("CustomerId",customerId);
         axios.post("http://localhost:8080/customer/checkAccount",ffdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
             console.log(res);
-    
-            if(res.data===null){
+            
+
+            if(res.data==="NOTFOUND"){
                 document.getElementById("content").innerHTML="<h1 class='pt-32 pl-40 text-left text-4xl'>Please Create your Bank Account to enable Features !</h1><button class='bg-[#2F4266] text-white ml-10 px-20 py-3 mt-10 rounded-md hover:cursor-pointer hover:bg-[#425475]' id='gotoaddaccount'>Add Account</button>";
                 document.getElementById("gotoaddaccount").addEventListener("click",()=>{
-                    window.location.href="/addaccount";
+                    window.location.href="/createaccount";
                 });
-            return;
+                return;
+            }else if(res.data==="APPROVED"){
+                
+            }else if(res.data==="REJECTED"){
+                document.getElementById("content").innerHTML="<h1 class='pt-32 pl-40 text-left text-4xl'>Your Account is Rejected by Admin !</h1>";
+            }else{
+                document.getElementById("content").innerHTML="<h1 class='pt-32 pl-40 text-left text-4xl'>Your Account is Pending for Approval !</h1>";
             }
+
+
+
+
     
         });
 
