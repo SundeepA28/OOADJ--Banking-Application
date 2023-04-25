@@ -16,7 +16,8 @@ const Transactions = () => {
     var accbal = 0;      
     const hasMounted = useRef(false);  
     useEffect(() => {
-        if(!hasMounted.current){hasMounted.current=true;
+        if(!hasMounted.current){
+            hasMounted.current=true;
         
 
         var fdata = new FormData();
@@ -32,9 +33,62 @@ const Transactions = () => {
             }else if(res.data==="APPROVED"){
 
                 axios.post("http://localhost:8080/customer/getAccountDetailsForCustomer",fdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((resp)=>{
-                
+                console.log(resp);
                 accno = resp.data.accountNo;
                 accbal = resp.data.accountBalance;
+
+
+
+                var ffdata = new FormData();
+                ffdata.append("customerId",customerId);
+                axios.post("http://localhost:8080/customer/AllTransactions",ffdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
+                    console.log(res);
+                    console.log(accno);
+                    var table = document.getElementById("transactions");
+                    for(var i=0;i<res.data.length;i++){
+                        var row=table.insertRow(-1);
+                        var cell1=row.insertCell(0);
+                        var cell2=row.insertCell(1);
+                        var cell3=row.insertCell(2);
+                        var cell4=row.insertCell(3);
+                        var cell5=row.insertCell(4);
+                        var cell6=row.insertCell(5);
+                        var cell7=row.insertCell(6);
+                        
+                        var AccountNumber = 0;
+                        var credit = false;
+                        if(res.data[i].senderAccountNo === accno){
+                            AccountNumber = res.data[i].receiveeAccountNo;
+                        }else{
+                            AccountNumber = res.data[i].senderAccountNo;
+                            credit = true;
+                        }
+        
+                        if(credit===true){
+                            cell1.innerHTML=res.data[i].transactionID;
+                            cell2.innerHTML=AccountNumber;
+                            cell3.innerHTML=res.data[i].amount;
+                            cell4.innerHTML="-";
+                            cell5.innerHTML=res.data[i].description;
+                            cell6.innerHTML=res.data[i].date;
+                            cell7.innerHTML=res.data[i].status;
+                        }else{
+                            cell1.innerHTML=res.data[i].transactionID;
+                            cell2.innerHTML=AccountNumber;
+                            cell3.innerHTML="-";
+                            cell4.innerHTML=res.data[i].amount;
+                            cell5.innerHTML=res.data[i].description;
+                            cell6.innerHTML=res.data[i].date;
+                            cell7.innerHTML=res.data[i].status;
+                        }
+                        
+                    }
+                
+            });
+
+
+
+
                 });
 
                 
@@ -49,51 +103,7 @@ const Transactions = () => {
 
         });
 
-        var ffdata = new FormData();
-        ffdata.append("customerId",customerId);
-        axios.post("http://localhost:8080/customer/AllTransactions",ffdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
-            console.log(res);
-            var table = document.getElementById("transactions");
-            for(var i=0;i<res.data.length;i++){
-                var row=table.insertRow(-1);
-                var cell1=row.insertCell(0);
-                var cell2=row.insertCell(1);
-                var cell3=row.insertCell(2);
-                var cell4=row.insertCell(3);
-                var cell5=row.insertCell(4);
-                var cell6=row.insertCell(5);
-                var cell7=row.insertCell(6);
-                
-                var AccountNumber = 0;
-                var credit = false;
-                if(res.data[i].senderAccountNo === accno){
-                    AccountNumber = res.data[i].receiveeAccountNo;
-                }else{
-                    AccountNumber = res.data[i].senderAccountNo;
-                    credit = true;
-                }
-
-                if(credit==true){
-                    cell1.innerHTML=res.data[i].transactionID;
-                    cell2.innerHTML=AccountNumber;
-                    cell3.innerHTML=res.data[i].amount;
-                    cell4.innerHTML="-";
-                    cell5.innerHTML=res.data[i].description;
-                    cell6.innerHTML=res.data[i].date;
-                    cell7.innerHTML=res.data[i].status;
-                }else{
-                    cell1.innerHTML=res.data[i].transactionID;
-                    cell2.innerHTML=AccountNumber;
-                    cell3.innerHTML="-";
-                    cell4.innerHTML=res.data[i].amount;
-                    cell5.innerHTML=res.data[i].description;
-                    cell6.innerHTML=res.data[i].date;
-                    cell7.innerHTML=res.data[i].status;
-                }
-                
-            }
-        
-    });
+     
 
 
 
@@ -156,6 +166,9 @@ return (
                 <div class="py-3 text-left pl-5 hover:bg-[#ECEFF5] hover:cursor-pointer" onClick={()=>window.location.href="/addbeneficiary"}>Add Beneficiary</div>
                 <div class="py-3 text-left pl-5 hover:bg-[#ECEFF5] hover:cursor-pointer" onClick={()=>window.location.href="/allbeneficiary"}>All Beneficiaries</div>
                 <div class="py-3 text-left pl-5 hover:bg-[#ECEFF5] hover:cursor-pointer" onClick={()=>window.location.href="/applyloan"}>Apply for Loan</div>
+                <div class="py-3 text-left pl-5 hover:bg-[#ECEFF5] hover:cursor-pointer" onClick={()=>window.location.href="/loanapplications"}>Loan Applications</div>
+                <div class="py-3 text-left pl-5 hover:bg-[#ECEFF5] hover:cursor-pointer" onClick={()=>window.location.href="/updatenominee"}>Update Nominee</div>
+                <div class="py-3 text-left pl-5 hover:bg-[#ECEFF5] hover:cursor-pointer" onClick={()=>window.location.href="/changepin"}>Change Pin</div>
                 
                 </div>
             </div>

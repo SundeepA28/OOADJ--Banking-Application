@@ -19,6 +19,7 @@ import ApproveBeneficiaries from './components/approveBeneficiaries';
 import UpdateLoanStatus from './components/updateLoanStatus';
 import CreateAccount from './components/createAccount';
 import ApproveAccount from './components/approveAccount';
+import ChangePin from './components/changePin';
 function App() {
   return (
     <div className="App">
@@ -41,6 +42,7 @@ function App() {
           <Route exact path="/updateloanstatus" element={<UpdateLoanStatus/>}></Route>
           <Route exact path="/createaccount" element={<CreateAccount/>}></Route>
           <Route exact path="/approveaccount" element={<ApproveAccount/>}></Route>
+          <Route exact path="/changepin" element={<ChangePin/>}></Route>
           
         </Routes>
       </Router>

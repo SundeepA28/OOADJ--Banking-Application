@@ -56,7 +56,7 @@ public class CustomerController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<Boolean> RegisterCustomer(@RequestParam("Name") String Name,
+    public ResponseEntity<String> RegisterCustomer(@RequestParam("Name") String Name,
                                                      @RequestParam("PhoneNumber") Long PhoneNumber,
                                                      @RequestParam("Address") String Address,
                                                      @RequestParam("Email") String Email,
@@ -66,12 +66,19 @@ public class CustomerController {
                                                      @RequestParam("PanCard") String pancardNo
 
     ){
+        Optional<Customer> cc = customerService.findCustomerByUsername(Username);
+        if(cc.isPresent()==true){
+            return new ResponseEntity<>("UsernameExists",HttpStatus.CREATED);
+        }else{
+            boolean ans = customerService.createCustomer(Name,PhoneNumber,Address,Email,Username,Password,aadhaarcardNo,pancardNo);
+            if(ans==false){
+                return new ResponseEntity<>("false",HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>("true",HttpStatus.CREATED);
+            }
 
-        boolean ans = customerService.createCustomer(Name,PhoneNumber,Address,Email,Username,Password,aadhaarcardNo,pancardNo);
-        if(ans==false){
-            return new ResponseEntity<>(false,HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(true,HttpStatus.CREATED);
+
     }
 
     @PostMapping("/updateProfile")

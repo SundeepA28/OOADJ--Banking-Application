@@ -2,6 +2,8 @@ import React,{useState} from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Logo from "./Common/admindash2.jpg";
+import Logo2 from "./Common/logo2.png";
 
 const AdminLogin = () => {
     const [data,setdata] = useState({});
@@ -55,16 +57,23 @@ const AdminLogin = () => {
     return (
         <>
         <ToastContainer/>
-           <div class="flex items-center justify-center h-screen">
-                <div class="w-5/12 justify-center rounded-xl bg-gray-200 shadow-lg px-20 py-5">
-                    <h1 class="font-semibold text-4xl text-center px-4 py-4 mb-5">Login to Your Admin Account</h1>
+        <div class="flex flex-row w-screen h-screen">
+            <div class="absolute w-36 h-32 rounded-md mt-4 mx-4">
+            <img src={Logo2}></img>
+            </div>
+            <div class="w-8/12 h-full">
+                <img src={Logo} class="h-screen"></img>
+            </div>
+                <div class="w-4/12 pt-40 bg-gray-200 px-10 py-5">
+                    <h1 class="font-semibold text-left text-3xl mt-8 py-4 mb-5">Login To Your Admin Account</h1>
                     
-                        <input type="text" onChange={(event)=>changeHandler(event)} id="username" placeholder="Enter Your Username" class="h-10 px-8 rounded-lg" required></input><br />
-                        <input type="text" onChange={(event)=>changeHandler(event)} id="password" placeholder="Enter Your Password" class="h-10 px-8 rounded-lg mt-4" required></input><br />
-                        <input type="submit"  class="bg-black rounded-xl py-2 px-24 my-4 text-white hover:cursor-pointer hover:text-white hover:bg-gray-500" onClick={submitHandler}></input><br />
-                    
+                        <input type="text" onChange={(event)=>changeHandler(event)} id="username" placeholder="Enter Your Username" class="float-left w-10/12 h-10 px-8 rounded-lg" required></input><br />
+                        <input type="text" onChange={(event)=>changeHandler(event)} id="password" placeholder="Enter Your Password" class="float-left w-10/12 h-10 px-8 rounded-lg mt-4" required></input><br />
+                        <input type="submit"  class="bg-[#2F4266] text-white float-left ml-10 mt-8 mb-3 px-24 py-2 rounded-md hover:cursor-pointer hover:bg-[#425475]" onClick={submitHandler}></input><br />
+                       
                 </div>
             </div>
+
 
         </>
     );

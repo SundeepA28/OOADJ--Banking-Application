@@ -77,6 +77,8 @@ const UpdateProfile = () => {
 
                 data.Cid=customerId;
                 data.Name=res.data.name;
+                data.aadhaarCardNo = res.data.aadhaarCardNo;
+                data.panCardNo = res.data.panCardNo;
                 data.PhoneNumber=res.data.phoneNumber;
                 data.Email=res.data.email;
                 data.Address=res.data.address;
@@ -86,6 +88,9 @@ const UpdateProfile = () => {
 
                 document.getElementById("name").value=res.data.name;
                 document.getElementById("phn").value=res.data.phoneNumber;
+                document.getElementById("aadhaarcardno").value=res.data.aadhaarCardNo;
+                document.getElementById("pancardno").value=res.data.panCardNo;
+                
                 document.getElementById("Email").value=res.data.email;
                 document.getElementById("Address").value=res.data.address;
                 document.getElementById("username").value=res.data.username;
@@ -166,6 +171,16 @@ return (
                 <td id="trnstabletd"><label>Name : </label></td><td id="trnstabletd">
                 <input type="text" id="name" onChange={(event)=>changeHandler(event)} class="h-10 px-4 rounded-lg" required disabled></input><br />
                 </td></tr>
+                
+                <tr>
+                <td id="trnstabletd"><label>Aadhaar Card No : </label></td><td id="trnstabletd">
+                <input type="text" id="aadhaarcardno" onChange={(event)=>changeHandler(event)} class="h-10 px-4 rounded-lg" required disabled></input><br />
+                </td></tr>
+                <tr>
+                <td id="trnstabletd"><label>Pan Card No : </label></td><td id="trnstabletd">
+                <input type="text" id="pancardno" onChange={(event)=>changeHandler(event)} class="h-10 px-4 rounded-lg" required disabled></input><br />
+                </td></tr>
+
                 <tr>
                 <td id="trnstabletd"><label>Phone Number :</label></td><td id="trnstabletd">
                 <input type="text" id="phn" onChange={(event)=>changeHandler(event)} class="h-10 px-4 rounded-lg" required></input><br />

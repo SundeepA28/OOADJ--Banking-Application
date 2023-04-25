@@ -1,19 +1,19 @@
 import React,{useState,useEffect,useRef} from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import "./drp.css";
+import "./trns.css";
 
 import axios from 'axios';
 
 import Logo from "./Common/logo2.png";
 
-const UserDashboard = () => {
+const ChangePin = () => {
     var username = window.localStorage.getItem("username");
     var customerId = window.localStorage.getItem("customerId");
 
     var accno = 0;
     var accbal = 0;
-
+    const [data,setdata] = useState({});
     const [user,setuser] = useState({});
     const [accn,setaccn] = useState({});
     const hasMounted = useRef(false);
@@ -36,22 +36,6 @@ const UserDashboard = () => {
                     window.location.href="/createaccount";
                 });
             }else if(res.data==="APPROVED"){
-
-                axios.post("http://localhost:8080/customer/getAccountDetailsForCustomer",fdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((resp)=>{
-
-                document.getElementById("addData").innerHTML+=`
-                <div>
-                <h1 class="text-2xl pt-16">Account Number : ${resp.data.accountNo}</h1>
-                <h1 class="text-2xl pt-3">Account Balance : ${resp.data.accountBalance}</h1>
-                <h1 class="text-2xl pt-3">Customer ID : ${resp.data.customerId}</h1>
-                </div>`;
-                
-                accno = res.data.accountNo;
-                accbal = res.data.accountBalance;
-                getTrans();
-                });
-
-                
             }else if(res.data==="REJECTED"){
                 document.getElementById("content").innerHTML="<h1 class='pt-32 pl-40 text-left text-4xl'>Your Account is Rejected by Admin !</h1>";
             }else{
@@ -64,7 +48,7 @@ const UserDashboard = () => {
 
 
 const getTrans = () =>{
-    if(accno !== 0){
+    if(accno != 0){
         var ffdata = new FormData();
         ffdata.append("customerId",customerId);
         axios.post("http://localhost:8080/customer/AllTransactions",ffdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
@@ -84,13 +68,12 @@ const getTrans = () =>{
                 var credit = false;
                 if(res.data[i].senderAccountNo === accno){
                     AccountNumber = res.data[i].receiveeAccountNo;
-                    credit = false;
                 }else{
                     AccountNumber = res.data[i].senderAccountNo;
                     credit = true;
                 }
 
-                if(credit===true){
+                if(credit==true){
                     cell1.innerHTML=res.data[i].transactionID;
                     cell2.innerHTML=AccountNumber;
                     cell3.innerHTML=res.data[i].amount;
@@ -125,6 +108,52 @@ const logout_func = () =>{
 const editprofile_func = () => {
     window.location.href="/editprofile";
 };
+
+
+const changeHandler = (event) => {
+    const id = event.target.id;
+    if(id==="oldpin"){
+        setdata((olddata)=>({...olddata,OldPin:event.target.value}));
+    }else if(id==="newpin"){
+        setdata((olddata)=>({...olddata,NewPin:event.target.value}));
+    }else if(id==="confirmnewpin"){
+        setdata((olddata)=>({...olddata,ConfirmNewPin:event.target.value}));
+    }
+};
+
+
+const submitHandler = () =>{
+    
+    if(data.NewPin  !== data.ConfirmNewPin){
+        toast.error("Re-Entered Pin Does Not match");
+        return;
+    }
+
+
+    var ldata = new FormData();
+    ldata.append("CustomerID",customerId);
+    ldata.append("OldPIN",data.OldPin);
+    ldata.append("NewPIN",data.NewPin);
+
+    
+
+
+
+
+    axios.post("http://localhost:8080/customer/ChangePIN",ldata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
+        console.log(res);
+
+        if(res.data==="WrongPin"){
+            toast.error("Your Old Pin Does not match !");
+        }else{
+            toast.success("Pin Updated Successfull !");
+            setTimeout(() => {window.location.href = "/userdashboard";},3000);
+        }
+
+});
+
+}
+
 
 return (
     <div id="topmost" class="bg-[#ECEFF5]">
@@ -174,26 +203,29 @@ return (
             </div>
             <div  id="content" class="w-full">
                 <div class="pt-10 pl-10 text-left" id="addData">
-                <h1 class="text-4xl">Hey, Welcome to BankGO!</h1>
-                <h1 class="text-2xl pt-3">Your One Stop Destination to make Your Banking Easy!</h1>
+                <h1 class="text-4xl">Change Your Account Pin!</h1>
+                <h1 class="text-2xl pt-3">Note: Please change your pin frequently to avoid any theft danger !</h1>
                 
                 </div>
 
                 <div class="text-left pl-10 pt-10">
-                    <h1 class="text-xl pt-3">Your Recent Transactions:</h1>
-                    <div id="insertData" class="pt-0">
-                    <table id="transactions">
+                <table>
                         <tr>
-                            <th>Transaction ID</th>
-                            <th>Account No</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Description</th>
-                            <th>Date</th>
-                            <th>Status</th>
+                            <td id="trnstabletd"><label  class="text-2xl w-8/12 px-10 py-10 mb-10">Old Pin :</label></td>
+                            <td id="trnstabletd"><input type="text" id="oldpin" class="ml-6 w-80 h-10 rounded-md px-6" onChange={changeHandler} placeholder="Enter Old Pin "/></td>
                         </tr>
+                        <tr>
+                            <td id="trnstabletd"><label  class="text-2xl w-8/12 px-10 py-10 mb-10">New Pin : </label></td>
+                            <td id="trnstabletd"><input type="text" id="newpin" class="ml-6 w-80 h-10 rounded-md px-6" onChange={changeHandler} placeholder="Enter New Pin"/></td>
+                        </tr>
+                        <tr>
+                            <td id="trnstabletd"><label  class="text-2xl w-8/12 px-10 py-10 mb-10">Confirm New Pin : </label></td>
+                            <td id="trnstabletd"><input type="text" id="confirmnewpin" class="ml-6 w-80 h-10 rounded-md px-6" onChange={changeHandler} placeholder="Confirm New Pin"/></td>
+                        </tr>
+                        <tr>
+                        <td id="trnstabletd" colSpan={2} class="items-center"><button onClick={submitHandler} class="bg-[#2F4266] text-white ml-32 mt-4 w-8/12 px-16 py-2 rounded-md hover:cursor-pointer hover:bg-[#425475]">Update Pin</button></td>
+                    </tr>
                     </table>
-                    </div>
                 </div>
 
             </div>
@@ -205,4 +237,4 @@ return (
 
 
 
-export default UserDashboard;
+export default ChangePin;

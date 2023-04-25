@@ -55,7 +55,7 @@ const accept_func = (event) =>{
     axios.post("http://localhost:8080/bank/updateBeneficiary",formdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
         console.log(res);
         if(res.data===true){
-            toast.success("Nominee Approved Successfully !");
+            toast.success("Beneficiary Updated Successfully !");
         }else{
             toast.error("Internal Server Error !")
         }
@@ -75,7 +75,7 @@ const reject_func = (event) =>{
     axios.post("http://localhost:8080/bank/updateBeneficiary",formdata,{headers:{"Access-Control-Allow-Origin":"*"}}).then((res)=>{
         console.log(res);
         if(res.data===true){
-            toast.success("Nominee Rejected Successfully !");
+            toast.success("Beneficiary Updated Successfully!");
         }else{
             toast.error("Internal Server Error !")
         }

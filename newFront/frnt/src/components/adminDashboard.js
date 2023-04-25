@@ -2,10 +2,10 @@ import React,{useState,useEffect,useRef} from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./drp.css";
-
+import Logo from "./Common/logo2.png";
 import axios from 'axios';
 
-import Logo from "./Common/logo2.png";
+
 
 const AdminDashboard = () => {
     var username = window.localStorage.getItem("username");

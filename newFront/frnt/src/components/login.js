@@ -52,7 +52,7 @@ const Login = () => {
             <img src={Logo2}></img>
             </div>
             <div class="w-8/12 h-full">
-                <img src={Logo}></img>
+                <img src={Logo}  class="h-screen"></img>
             </div>
                 <div class="w-4/12 pt-40 bg-gray-200 px-10 py-5">
                     <h1 class="font-semibold text-left text-3xl mt-4 py-4 mb-5">Login To Your Account</h1>
