@@ -7,7 +7,7 @@ import axios from 'axios';
 
 import Logo from "./Common/logo2.png";
 
-const ApproveAccount = () => {
+const AllCustomerList = () => {
     var username = window.localStorage.getItem("username");
 
 
@@ -27,7 +27,7 @@ const ApproveAccount = () => {
                 var cid = res.data[i].customerID;
                 var cname=res.data[i].name;
                 var pno = res.data[i].panCardNo;
-                var ano = res.data[i].aadharCardNo;
+                var ano = res.data[i].aadhaarCardNo;
 
                 var cdata = new FormData();
                 cdata.append("CustomerId",cid);
@@ -35,9 +35,7 @@ const ApproveAccount = () => {
 
                 var ans = check_account(cid,cname,pno,ano);
                 
-                
-
-
+            
                } 
             });
         }
@@ -54,9 +52,8 @@ const check_account = (cid,cname,pno,ano) => {
         console.log(resp);    
         ans = resp.data;
         console.log(ans);
-        if(ans==="PENDING"){
-            addtotable(cid,cname,pno,ano);  
-        }
+        addtotable(cid,cname,pno,ano);  
+        
     });
     return ans;
 }
@@ -76,15 +73,16 @@ const addtotable = (cid,cname,pno,ano) => {
                             var cell4 = row.insertCell(3);
                             var cell5 = row.insertCell(4);
                             var cell6 = row.insertCell(5);
+                            var cell7 = row.insertCell(6);
+
 
                             cell1.innerHTML = cid;
                             cell2.innerHTML = cname;
                             cell3.innerHTML = pno;
                             cell4.innerHTML = ano;
-                            cell5.innerHTML = respp.data.accountType;
-                            cell6.innerHTML = `<div class="flex flex-row gap-3"><button id="${respp.data.accountNo}-Accept" class="bg-[#2F4266] text-white ml-10 px-16 py-2 rounded-md hover:cursor-pointer hover:bg-[#425475]">Accept</button><button id="${respp.data.accountNo}-Reject" class="bg-[#2F4266] text-white ml-10 px-16 py-2 rounded-md hover:cursor-pointer hover:bg-[#425475]">Reject</button></div>`;
-                            document.getElementById(`${respp.data.accountNo}-Accept`).addEventListener("click",(event)=>accept_func(event));
-                            document.getElementById(`${respp.data.accountNo}-Reject`).addEventListener("click",(event)=>reject_func(event));
+                            cell5.innerHTML = respp.data.accountNo;
+                            cell6.innerHTML = respp.data.accountType;
+                            cell7.innerHTML = respp.data.accountBalance;
                         
 
                         });
@@ -182,8 +180,8 @@ return (
             </div>
             <div  id="content">
                 <div class="pt-10 pl-10 text-left" id="addData">
-                <h1 class="text-4xl">Hey, Welcome to BankGO!</h1>
-                <h1 class="text-2xl pt-3">Your One Stop Destination to make Your Banking Easy!</h1>
+                <h1 class="text-4xl">All Customers!</h1>
+                <h1 class="text-2xl pt-3">You can Find all your account holders below!</h1>
                 
                 </div>
 
@@ -194,8 +192,9 @@ return (
                             <th>Customer Name</th>
                             <th>Pan Card No</th>
                             <th>Aadhar Card No</th>
+                            <th>Account Number</th>
                             <th>Account Type</th>
-                            <th>Action</th>
+                            <th>Account Balance</th>
                         </tr>
                     </table>
                 </div>
@@ -209,4 +208,4 @@ return (
 
 
 
-export default ApproveAccount;
+export default AllCustomerList;

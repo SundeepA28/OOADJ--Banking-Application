@@ -147,7 +147,7 @@ return (
             </div>
             <div  id="content">
                 <div class="pt-10 pl-10 text-left" id="addData">
-                <h1 class="text-4xl">Apply Loan Online !</h1>
+                <h1 class="text-4xl">Create Account !</h1>
                 <h1 class="text-2xl pt-3">Note: After Applying for loan below do check all Loans Section for Loan Status Update !</h1>
                 
                 </div>

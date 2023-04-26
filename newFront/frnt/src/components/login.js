@@ -58,7 +58,7 @@ const Login = () => {
                     <h1 class="font-semibold text-left text-3xl mt-4 py-4 mb-5">Login To Your Account</h1>
                     
                         <input type="text" onChange={(event)=>changeHandler(event)} id="username" placeholder="Enter Your Username" class="float-left w-10/12 h-10 px-8 rounded-lg" required></input><br />
-                        <input type="text" onChange={(event)=>changeHandler(event)} id="password" placeholder="Enter Your Password" class="float-left w-10/12 h-10 px-8 rounded-lg mt-4" required></input><br />
+                        <input type="password" onChange={(event)=>changeHandler(event)} id="password" placeholder="Enter Your Password" class="float-left w-10/12 h-10 px-8 rounded-lg mt-4" required></input><br />
                         <input type="submit"  class="bg-[#2F4266] text-white float-left ml-10 mt-8 mb-3 px-24 py-2 rounded-md hover:cursor-pointer hover:bg-[#425475]" onClick={submitHandler}></input><br />
                         <div><br/><br/><br/><br/><br/><p class="float-left ml-4 text-gray-400 opacity-70 hover:text-[#2F4266] hover:underline hover:cursor-pointer" onClick={()=>{window.location.href="/register"}} >Don't Have an Account Yet? Register Now</p><br/>
                         </div>

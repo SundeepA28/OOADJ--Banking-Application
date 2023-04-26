@@ -179,22 +179,6 @@ return (
                 
                 </div>
 
-                <div class="text-left pl-10 pt-10">
-                    <h1 class="text-xl pt-3">Your Recent Transactions:</h1>
-                    <div id="insertData" class="pt-0">
-                    <table id="transactions">
-                        <tr>
-                            <th>Transaction ID</th>
-                            <th>Account No</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Description</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </table>
-                    </div>
-                </div>
 
             </div>
         </div>

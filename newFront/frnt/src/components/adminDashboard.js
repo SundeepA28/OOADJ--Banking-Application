@@ -68,6 +68,7 @@ return (
                 <div class="py-3 text-left pl-5 hover:bg-[#ECEFF5] hover:cursor-pointer" onClick={()=>window.location.href="/approvebeneficiaries"}>Approve Beneficiaries</div>
                 <div class="py-3 text-left pl-5 hover:bg-[#ECEFF5] hover:cursor-pointer" onClick={()=>window.location.href="/updateloanstatus"}>Update Loan Status</div> 
                 <div class="py-3 text-left pl-5 hover:bg-[#ECEFF5] hover:cursor-pointer" onClick={()=>window.location.href="/approveaccount"}>Approve Account</div> 
+                <div class="py-3 text-left pl-5 hover:bg-[#ECEFF5] hover:cursor-pointer" onClick={()=>window.location.href="/allCustomerList"}>View Customers</div> 
                 
                 </div>
             </div>

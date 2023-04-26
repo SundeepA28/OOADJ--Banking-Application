@@ -128,10 +128,10 @@ const submitHandler = () =>{
             toast.error("Your Account does not have sufficient funds to transfer !");
         }else if(res.data==="TransactionDone"){
             toast.success("Transaction Successfull !");
-            window.location.href="/userdashboard";
+            setTimeout(() => {window.location.href = "/userdashboard";},3000);
         }else if(res.data==="ToAccountNotFoundAddedtoGlobal"){
             toast.success("Transfer to other bank will happen in due time !");
-            window.location.href="/userdashboard";
+            setTimeout(() => {window.location.href = "/userdashboard";},3000);
         }else if(res.data==="ToAccountNotFound"){
             toast.error("Amount Deducted but Global Transaction Error !");
         }
